@@ -52,9 +52,10 @@ void mergeSort(int left, int right)
         Rvector.push_back(p2[Rindex]);
         Rindex++;
     }
-    for(int i=0;i<Lvector.size();i++){
-        p[left+i] = Lvector[i];
-        p2[left+i] = Rvector[i];
+    for (int i = 0; i < Lvector.size(); i++)
+    {
+        p[left + i] = Lvector[i];
+        p2[left + i] = Rvector[i];
     }
 }
 
@@ -80,5 +81,5 @@ int main()
     }
     mergeSort(1, n * 2);
     cout << ans << endl;
-    system("pause");
+    return 0;
 }
