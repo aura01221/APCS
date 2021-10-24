@@ -1,18 +1,13 @@
 #include <iostream>
 using namespace std;
 
-const int dirX[4] = {-1, 0, 1, 0}; //left up right down
-const int dirY[4] = {0, -1, 0, 1}; // 0   1    2    3
-
-int max(int, int);
-int min(int, int);
-
-int main(void)
+int main()
 {
 	int r, c, k, m;
 	int city[52][52];
 	int move[52][52];
 	cin >> r >> c >> k >> m;
+	//輸入一開始人數
 	for (int i = 1; i <= r; i++)
 	{
 		for (int j = 1; j <= c; j++)
@@ -20,6 +15,7 @@ int main(void)
 			cin >> city[i][j];
 		}
 	}
+	//建立牆壁
 	for (int i = 0; i < 52; i++)
 	{
 		city[0][i] = -1;
@@ -34,9 +30,10 @@ int main(void)
 		city[r + 1][i] = -1;
 	}
 	int neighbor;
+	//重複m天
 	for (int day = 1; day <= m; day++)
-	{ //repeat for m days
-		//empty move arr
+	{ 
+		//清空move array
 		for (int i = 1; i <= r; i++)
 		{
 			for (int j = 1; j <= c; j++)
@@ -44,25 +41,37 @@ int main(void)
 				move[i][j] = 0;
 			}
 		}
-		//move in & out
+		//計算遷移人數
 		for (int i = 1; i <= r; i++)
 		{
 			for (int j = 1; j <= c; j++)
 			{
 				neighbor = 0;
-				for (int dir = 0; dir <= 3; dir++)
-				{ //find neighbors
-					if (city[i + dirY[dir]][j + dirX[dir]] != -1)
-					{
-						neighbor++;
-						move[i + dirY[dir]][j + dirX[dir]] += city[i][j] / k;
-					}
+				if (city[i-1][j] != -1)
+				{
+					neighbor++;
+					move[i-1][j] += city[i][j] / k;
+				}
+				if (city[i][j] != -1)
+				{
+					neighbor++;
+					move[i+1][j] += city[i][j] / k;
+				}
+				if (city[i][j-1] != -1)
+				{
+					neighbor++;
+					move[i][j-1] += city[i][j] / k;
+				}
+				if (city[i][j+1] != -1)
+				{
+					neighbor++;
+					move[i][j+1] += city[i][j] / k;
 				}
 				move[i][j] -= city[i][j] / k * neighbor;
 			}
 		}
 
-		//update
+		//更新city
 		for (int i = 1; i <= r; i++)
 		{
 			for (int j = 1; j <= c; j++)
@@ -70,49 +79,27 @@ int main(void)
 				city[i][j] += move[i][j];
 			}
 		}
-
-		for (int i = 0; i <= r; i++)
-		{
-			for (int j = 0; j <= c; j++)
-			{
-				cout << city[i][j] << ' ';
-			}
-			cout << endl;
-		}
-		cout << endl;
 	}
 
-	//search for max & min
+	//找出最大和最小的人數
 	int maximum = 0;
-	int minimum = 1000;
+	int minimum = 10000;
 	for (int i = 1; i <= r; i++)
 	{
 		for (int j = 1; j <= c; j++)
 		{
 			if (city[i][j] != -1)
 			{
-				maximum = max(maximum, city[i][j]);
-				minimum = min(minimum, city[i][j]);
+				if(maximum<city[i][j]){
+					maximum=city[i][j];	
+				}
+				if(minimum>city[i][j]){
+					minimum=city[i][j];	
+				}
 			}
 		}
 	}
-
-	//print
-	printf("%d\n%d\n", minimum, maximum);
-	system("pause");
+	//輸出
+	cout<<minimum<<endl<<maximum<<endl;
 	return 0;
-}
-
-int max(int a, int b)
-{
-	if (a > b)
-		return a;
-	return b;
-}
-
-int min(int a, int b)
-{
-	if (a < b)
-		return a;
-	return b;
 }
